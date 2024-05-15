@@ -10,3 +10,5 @@ captures
 .cxx
 local.properties
 xcuserdata
+*.dll
+*.so

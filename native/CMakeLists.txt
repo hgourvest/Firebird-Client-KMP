@@ -1,13 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-if (NOT ANDROID)
-  find_package(JNI REQUIRED)
-endif()
-
 project("jnifbclient")
 
 if (NOT ANDROID)
   include_directories(${JNI_INCLUDE_DIRS})
+  include_directories(jni/)
   include_directories(jni/${CMAKE_SYSTEM_NAME})
 endif()
 
