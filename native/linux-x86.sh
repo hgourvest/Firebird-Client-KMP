@@ -1,0 +1,6 @@
+rm -r '../library/src/jvmMain/resources/jni/linux-x86/'
+rm -r './build/Linux/x86'
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-Linux-x86.cmake -DCMAKE_BUILD_TYPE=Release -B './build/Linux/x86'
+cmake --build './build/Linux/x86'
+mkdir -p '../library/src/jvmMain/resources/jni/linux-x86/'
+cp './build/Linux/x86/libjnifbclient.so' '../library/src/jvmMain/resources/jni/linux-x86/'

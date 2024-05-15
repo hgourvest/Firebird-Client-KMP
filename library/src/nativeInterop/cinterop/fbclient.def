@@ -1,0 +1,8 @@
+package = org.firebirdsql.fbclient
+
+compilerOpts = -I../native/include/
+
+linkerOpts.mingw = -L"C:/Program Files/Firebird/Firebird_5_0/lib/" -lfbclient_ms
+linkerOpts.linux = -L/opt/firebird/lib/ -lfbclient
+linkerOpts.osx = -L/Library/Frameworks/Firebird.framework/Resources/lib/ -lfbclient
+

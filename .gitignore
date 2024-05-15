@@ -1,0 +1,12 @@
+*.iml
+.gradle
+.idea
+.DS_Store
+build
+cmake-build-debug
+cmake-build-release
+captures
+.externalNativeBuild
+.cxx
+local.properties
+xcuserdata

@@ -1,0 +1,6 @@
+rm -r '../library/src/jvmMain/resources/jni/windows-x86'
+rm -r './build/Windows/x86'
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-Windows-x86.cmake -DCMAKE_BUILD_TYPE=Release -B './build/Windows/x86'
+cmake --build './build/Windows/x86'
+mkdir -p '../library/src/jvmMain/resources/jni/windows-x86/'
+cp './build/Windows/x86/libjnifbclient.dll' '../library/src/jvmMain/resources/jni/windows-x86/jnifbclient.dll'

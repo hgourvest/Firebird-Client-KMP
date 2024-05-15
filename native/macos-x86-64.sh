@@ -1,0 +1,6 @@
+rm -r '../library/src/jvmMain/resources/jni/macos-x86-64/'
+rm -r './build/Darwin/x86_64'
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-Darwin-x86_64.cmake -DCMAKE_BUILD_TYPE=Release -B './build/Darwin/x86_64'
+cmake --build './build/Darwin/x86_64'
+mkdir -p '../library/src/jvmMain/resources/jni/macos-x86-64/'
+cp './build/Darwin/x86_64/libjnifbclient.dylib' '../library/src/jvmMain/resources/jni/macos-x86-64/'

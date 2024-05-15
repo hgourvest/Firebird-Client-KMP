@@ -1,0 +1,16 @@
+[versions]
+agp = "8.2.2"
+kotlin = "1.9.24"
+bignum = "0.3.9"
+kdate = "0.6.0-RC.2"
+coroutines = "1.8.0"
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
+kotlinx-datetime = {module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kdate"}
+kotlinx-coroutines = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
+
+[plugins]
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

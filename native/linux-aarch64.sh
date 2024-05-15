@@ -1,0 +1,6 @@
+rm -r '../library/src/jvmMain/resources/jni/linux-aarch64/'
+rm -r './build/Linux/aarch64'
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-Linux-aarch64.cmake -DCMAKE_BUILD_TYPE=Release -B './build/Linux/aarch64'
+cmake --build './build/Linux/aarch64'
+mkdir -p '../library/src/jvmMain/resources/jni/linux-aarch64/'
+cp './build/Linux/aarch64/libjnifbclient.so' '../library/src/jvmMain/resources/jni/linux-aarch64/'
