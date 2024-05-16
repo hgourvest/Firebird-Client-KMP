@@ -12,3 +12,4 @@ local.properties
 xcuserdata
 *.dll
 *.so
+*.dylib
