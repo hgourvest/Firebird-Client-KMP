@@ -1,45 +1,65 @@
 package com.progdigy.fbclient.ext
 
-
 import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.BigInteger.Companion.createFromWordArray
 import com.ionspin.kotlin.bignum.integer.Sign
-import com.progdigy.fbclient.Int128
-import com.progdigy.fbclient.Attachment.Transaction.*
-import com.progdigy.fbclient.Type
+import com.progdigy.fbclient.Attachment.Transaction.SQLDA
 
+/** This method retrieves a BigInteger value from the SQLDA object at the specified index.
+ *
+ * @param index the index of the field in the SQLDA object to retrieve the BigInteger value
+ *  from
+ * @return the BigInteger value at the specified index, or null if the field is null
+ */
 fun SQLDA.getBigIntegerOrNull(index: Int): BigInteger? = if (getIsNull(index)) null else getBigInteger(index)
-fun SQLDA.getBigInteger(index: Int): BigInteger = getInt128(index).toBigInteger()
 
-fun SQLDA.setBigInteger(index: Int, value: BigInteger) = Int128.fromBigInteger(value) { a, b ->
+/**
+ * Returns a BigInteger value from the SQLDA at the specified index.
+ *
+ * @param index the index of the value in the SQLDA
+ * @return the BigInteger value at the specified index
+ */
+fun SQLDA.getBigInteger(index: Int): BigInteger = getInt128(index).let { int128ToBigInteger(it[0], it[1]) }
+
+/**
+ * Sets the value of a BigInteger at the specified index in the SQLDA.
+ *
+ * @param index The index at which to set the BigInteger value.
+ * @param value The BigInteger value to be set.
+ */
+fun SQLDA.setBigInteger(index: Int, value: BigInteger) = value.firebirdDecode { a, b ->
     setInt128(index, a, b)
 }
 
-fun BigInteger.fbCalcType(): Type =
-    when {
-        this <= Short.MAX_VALUE && this >= Short.MIN_VALUE -> Type.SHORT
-        this <= Int.MAX_VALUE && this >= Int.MIN_VALUE -> Type.INT
-        this <= Long.MAX_VALUE && this >= Long.MIN_VALUE -> Type.LONG
-        else -> Type.INT128
-    }
-
-fun Int128.Companion.fromBigInteger(value: BigInteger): Int128 {
+/**
+ * Decodes the current [BigInteger] using the Firebird encoding scheme and returns the result as a [LongArray].
+ *
+ * The Firebird encoding scheme represents a [BigInteger] as a pair of [Long] values.
+ * The decoded values are calculated based on the sign and the content of the [BigInteger].
+ *
+ * @return A [LongArray] containing the decoded values. The first element of the array represents the most significant bits (v0) and the second element represents the least significant
+ *  bits (v1).
+ */
+fun BigInteger.firebirdDecode(): LongArray {
     var v0 = 0L
     var v1 = 0L
-    fromBigInteger(value) { a, b ->
+    firebirdDecode { a, b ->
         v0 = a; v1 = b
     }
-    return Int128(v0, v1)
+    return longArrayOf(v0, v1)
 }
 
-fun Int128.toBigInteger(): BigInteger = Int128.toBigInteger(a, b)
-
+/**
+ * Decodes a [BigInteger] using Firebird encoding and invokes the provided [block] with the resulting values.
+ *
+ * The Firebird encoding scheme represents a [BigInteger] as a pair of [Long] values.
+ */
 @OptIn(ExperimentalUnsignedTypes::class)
-inline fun Int128.Companion.fromBigInteger(value: BigInteger, block: (a:Long, b:Long) -> Unit) {
-    val words = value.getBackingArrayCopy().toLongArray()
+inline fun BigInteger.firebirdDecode(block: (a:Long, b:Long) -> Unit) {
+    val words = getBackingArrayCopy().toLongArray()
     val v0: Long = words[0]
     val v1: Long = if (words.size > 1) words[1] else 0L
-    when (value.getSign()) {
+    when (getSign()) {
         Sign.POSITIVE -> {
             if (v1 == 0L) {
                 block(v0, 0L)
@@ -68,12 +88,19 @@ inline fun Int128.Companion.fromBigInteger(value: BigInteger, block: (a:Long, b:
                 }
             }
         }
-        Sign.ZERO -> ZERO
+        Sign.ZERO -> block(0, 0)
     }
 }
 
+/**
+ * Converts two long values representing a 128-bit integer to a BigInteger.
+ *
+ * @param a The most significant 64 bits of the 128-bit integer.
+ * @param b The least significant 64 bits of the 128-bit integer.
+ * @return The BigInteger representation of the 128-bit integer.
+ */
 @OptIn(ExperimentalUnsignedTypes::class)
-fun Int128.Companion.toBigInteger(a: Long, b: Long): BigInteger {
+fun int128ToBigInteger(a: Long, b: Long): BigInteger {
     val sign = when {
         b == 0L -> if (a == 0L) Sign.ZERO else Sign.POSITIVE
         b > 0L -> Sign.POSITIVE

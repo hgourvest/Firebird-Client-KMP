@@ -184,7 +184,7 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
         fun SQLDA.getShortOrNull(index: Int): Short? = if (getIsNull(index)) null else getShort(index)
         fun SQLDA.getIntOrNull(index: Int): Int? = if (getIsNull(index)) null else getInt(index)
         fun SQLDA.getLongOrNull(index: Int): Long? = if (getIsNull(index)) null else getLong(index)
-        fun SQLDA.getInt128OrNull(index: Int): Int128? = if (getIsNull(index)) null else getInt128(index)
+        fun SQLDA.getInt128OrNull(index: Int): LongArray? = if (getIsNull(index)) null else getInt128(index)
         fun SQLDA.getFloatOrNull(index: Int): Float? = if (getIsNull(index)) null else getFloat(index)
         fun SQLDA.getDoubleOrNull(index: Int): Double? = if (getIsNull(index)) null else getDouble(index)
         fun SQLDA.getStringOrNull(index: Int): String? = if (getIsNull(index)) null else getString(index)
@@ -252,12 +252,9 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
              * Retrieves the value of a 128-bit signed integer at the specified index in the SQLDA.
              *
              * @param index The index of the field in the SQLDA.
-             * @return The value of the 128-bit signed integer as an [Int128] object.
+             * @return The value of the 128-bit signed integer as an [LongArray] object.
              */
-            fun getInt128(index: Int): Int128 {
-                val arr = API.getValueInt128(sqlda, index)
-                return Int128(arr[0], arr[1])
-            }
+            fun getInt128(index: Int): LongArray = API.getValueInt128(sqlda, index)
 
             /**
              * Retrieves the float value of the field at the specified index in the SQLDA.
@@ -361,14 +358,6 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
              * @param value The long value to set.
              */
             fun setLong(index: Int, value: Long) = API.setValueLong(sqlda, index, value)
-
-            /**
-             * Sets the value of the field at the specified index in the SQLDA to a 128-bit signed integer.
-             *
-             * @param index The index of the field in the SQLDA.
-             * @param value The 128-bit signed integer value to set.
-             */
-            fun setInt128(index: Int, value: Int128) = API.setValueInt128(sqlda, index, value.a, value.b)
 
             /**
              * Sets the value of the field at the specified index in the SQLDA to a 128-bit signed integer.
