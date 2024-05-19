@@ -15,6 +15,9 @@ const val CLASS_INFO    = 2 // Code represents an information msg
 const val DSQL_close : Short = 1
 const val DSQL_drop	 : Short = 2
 
+/**
+ * Represents the data types for SQLDA fields.
+ */
 enum class Type {
     SHORT,
     INT,
@@ -34,6 +37,14 @@ enum class Type {
     BLOB_TEXT
 }
 
+/**
+ * Checks the status of a Firebird operation.
+ *
+ * @param statusArray The handle to the status array.
+ * @param status The status value to check.
+ * @return True if the status is successful, false otherwise.
+ * @throws FirebirdException if the status indicates an error.
+ */
 fun checkStatus(statusArray: HANDLE, status: STATUS): Boolean =
     if (status != 0L) {
         if (((status and CLASS_MASK) shr 30).toInt() == CLASS_ERROR) {

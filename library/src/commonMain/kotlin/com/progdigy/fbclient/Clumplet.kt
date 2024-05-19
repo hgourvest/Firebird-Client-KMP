@@ -145,7 +145,7 @@ internal const val isc_tpb_lock_timeout: Byte = 21
 internal const val isc_tpb_read_consistency: Byte = 22
 internal const val isc_tpb_at_snapshot_number: Byte = 23
 
-interface Clumplet {
+internal interface Clumplet {
     fun version(version: Byte)
     fun add(code: Byte)
     fun tag(code: Byte)
@@ -702,20 +702,33 @@ internal fun createPB(what: Clumplet.() -> Unit): ByteArray {
 }
 
 
-fun makeDPB(what: DatabaseParams.() -> Unit): ByteArray {
+/**
+ * Creates a dynamic parameter block (DPB) for a database connection.
+ *
+ * @param params A lambda expression that configures the database connection parameters.
+ * The lambda has a receiver of type [DatabaseParams], which allows calling various methods to set the desired parameters.
+ *
+ * @return The DPB as a byte array.
+ */
+fun makeDPB(params: DatabaseParams.() -> Unit): ByteArray {
     return createPB {
         version(isc_dpb_version1)
         tag(isc_dpb_utf8_filename)
-        (this as DatabaseParams).what()
+        (this as DatabaseParams).params()
         addString(isc_dpb_lc_ctype, "UTF-8")
     }
 }
 
-
-fun makeTPB(what: TransactionParams.() -> Unit): ByteArray {
+/**
+ * Creates a Transaction Parameter Buffer (TPB) based on the provided configuration.
+ *
+ * @param params a lambda expression that configures the TransactionParams object.
+ * @return the byte array representing the TPB.
+ */
+fun makeTPB(params: TransactionParams.() -> Unit): ByteArray {
     return createPB {
         version(isc_tpb_version1)
-        (this as TransactionParams).what()
+        (this as TransactionParams).params()
     }
 }
 
