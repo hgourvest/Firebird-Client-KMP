@@ -68,8 +68,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 This example creates a local database in **embedded** mode, the default encoding is UTF8 and dialect 3 is recommended for a new database.
 
-``` kotlin
-  fun attachment(block: Attachment.() -> Unit) {
+```kotlin
+fun attachment(block: Attachment.() -> Unit) { 
     val database = File("/tmp/database.fdb")
     if (!database.exists()) {
         Attachment.createDatabase(database.absolutePath, makeDPB {
@@ -112,9 +112,93 @@ fun main() {
 
 It is possible to connect to a remote database, please refer to the relevant [documentation](https://firebirdsql.org/file/documentation/html/en/firebirddocs/qsg5/firebird-5-quickstartguide.html#qsg5-databases-connstrings).
 
-``` kotlin
+```kotlin
 Attachment.attachDatabase("localhost:employee", makeDPB {
-  userName("SYSDBA")
-  password("masterkey")
+    userName("SYSDBA")
+    password("masterkey")
 })
+```
+
+### Open
+
+```kotlin
+statement("select id, name from CUSTOMER") {
+    open {
+        while (!eof) {
+            val id = getInt(0)
+            val name = getString(1)
+            println("id: $id, name: $name")
+            fetch()
+        }
+    }
+}
+```
+
+### Execute
+
+```kotlin
+statement("INSERT INTO CUSTOMER (id, name) VALUES (gen_id(GEN_CUSTOMER, 1), ?)") {
+    params.setString(0, "Barry Cade")
+    execute()
+}
+```
+
+### Returning
+
+```kotlin
+statement("INSERT INTO CUSTOMER (id, name) VALUES (gen_id(GEN_CUSTOMER, 1), ?) RETURNING ID") {
+    params.setString(0, "Ella Vader")
+    execute()
+    val id = result.getInt(0)
+    println("id: $id")
+}
+```
+### Transaction
+
+If you need to run several SQL queries that must be executed atomically, group them together in a single transaction.
+
+```kotlin
+transaction {
+
+}
+```
+
+You may need to validate or cancel certain changes without leaving the transaction.
+
+```kotlin
+transaction {
+  commitRetaining()
+  rollbackRetaining()
+}
+```
+
+Transactions can be configured in a number of ways.
+
+```kotlin
+transaction(makeTPB {
+    write()
+    readCommitted()
+    noWait()
+    recVersion()
+}) {
+
+}
+```
+
+### Select for update
+
+```kotlin
+transaction {
+    statement("SELECT * FROM CUSTOMER FOR UPDATE", "S") {
+        open {
+            statement("UPDATE CUSTOMER SET NAME = ? WHERE CURRENT OF S") {
+                while (!eof) {
+                    params.setString(0, "John Doe")
+                    execute()
+                    fetch()
+                }
+            } 
+        }
+    }
+}
 ```
