@@ -5,6 +5,6 @@ package com.progdigy.fbclient
  *
  * @property message The error message associated with the exception.
  */
-class FirebirdException(override val message: String): Exception() {
-
+class FirebirdException(val status: STATUS, message: String): Exception(message) {
+    constructor(message: String) : this(0, message)
 }

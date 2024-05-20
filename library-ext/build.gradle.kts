@@ -4,8 +4,16 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.progdigy.fbclientext"
+group = "com.progdigy"
 version = "1.0"
+
+publishing {
+    repositories {
+        maven {
+            url = uri(layout.buildDirectory.dir("repo"))
+        }
+    }
+}
 
 kotlin {
     jvm()
@@ -36,9 +44,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":FirebirdClient"))
-            implementation(libs.bignum)
-            implementation(libs.kotlinx.datetime)
+            api(project(":FirebirdClient"))
+            api(libs.bignum)
+            api(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

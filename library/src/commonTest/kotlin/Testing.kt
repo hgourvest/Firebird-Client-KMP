@@ -38,7 +38,7 @@ class Testing {
 
     @OptIn(ExperimentalStdlibApi::class)
     inline fun attachment(block: Attachment.(String) -> Unit) {
-        val db = "localhost:"+getTestDBPath()
+        val db = getTestDBPath()
         try {
             Attachment.createDatabase(db, dpb).use {
                 it.block(db)

@@ -867,5 +867,30 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
                 throw e
             }
         }
+
+        /**
+         * Attaches to an existing database or creates a new database if it does not exist.
+         *
+         * @param fileName The path of the database file.
+         * @param dpb The dynamic parameter block (DPB) as a byte array. It contains connection parameters.
+         *            Defaults to [makeDPB] function which returns a default DPB.
+         * @return An [Attachment] object representing the attached or created database.
+         * @throws Throwable if an error occurs during attaching or creating the database.
+         */
+        fun attachOrCreateDatabase(fileName: String, dpb: ByteArray = makeDPB {}): Attachment {
+            val status = API.allocStatusArray()
+            val dbHandle = API.allocHandle()
+            try {
+                var result = API.attachDatabase(status, fileName, dbHandle, dpb)
+                if (result == isc_io_error)
+                    result = API.createDatabase(status, fileName, dbHandle, dpb)
+                checkStatus(status, result)
+                return Attachment(status, dbHandle)
+            } catch (e: Throwable) {
+                API.freeHandle(dbHandle)
+                API.freeStatusArray(status)
+                throw e
+            }
+        }
     }
 }

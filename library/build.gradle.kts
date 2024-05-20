@@ -4,8 +4,16 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.progdigy.fbclient"
+group = "com.progdigy"
 version = "1.0"
+
+publishing {
+    repositories {
+        maven {
+            url = uri(layout.buildDirectory.dir("repo"))
+        }
+    }
+}
 
 kotlin {
     jvm()

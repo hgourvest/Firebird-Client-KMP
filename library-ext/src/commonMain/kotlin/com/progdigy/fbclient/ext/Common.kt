@@ -104,7 +104,6 @@ fun SQLDA.setAny(index: Int, value: Any?){
         is ByteArray -> setByteArray(index, value)
         is Float -> setFloat(index, value)
         is Double -> setDouble(index, value)
-        is Int128 -> setInt128(index, value.a, value.b)
         is BigInteger -> setBigInteger(index, value)
         is BigDecimal -> setBigDecimal(index, value)
         is LocalDate -> setDate(index, value)
