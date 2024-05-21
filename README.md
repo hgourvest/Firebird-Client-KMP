@@ -43,8 +43,7 @@ Download [Firebird 5 Android Embedded](https://firebirdsql.org/en/firebird-5-0/#
 folder at the root of your module.
 
 ⚠️ There is an [issue](https://github.com/FirebirdSQL/firebird/issues/8110) with Android 14 that has been fixed but is not yet officially available,
-you must use the latest version of the AAR file from [Github Continuous Integration](https://github.com/FirebirdSQL/firebird/actions/workflows/main.yml?query=branch%3Av5.0-release+). 
-you must be logged in to download the file.
+you need to use the [snapshots](https://github.com/FirebirdSQL/snapshots/releases/tag/snapshot-v5.0-release).
 
 Then declare these dependencies in your gradle file
 
