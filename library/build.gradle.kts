@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     id("maven-publish")
+    id("signing")
 }
 
 group = "com.progdigy"
@@ -11,6 +12,35 @@ publishing {
     repositories {
         maven {
             url = uri(layout.buildDirectory.dir("repo"))
+        }
+    }
+
+    publications.withType<MavenPublication> {
+        artifact(tasks.register("${name}JavadocJar", Jar::class) {
+            archiveClassifier = "javadoc"
+            archiveAppendix = this@withType.name
+        })
+        signing.sign(this)
+        pom {
+            name = "Firebird Client KMP"
+            description = "A Kotlin Multiplatform library for working with a Firebird SQL database."
+            url = "https://github.com/hgourvest/Firebird-Client-KMP"
+            licenses {
+                license {
+                    name = "MIT License"
+                    url = "https://opensource.org/licenses/MIT"
+                }
+            }
+            developers {
+                developer {
+                    id = "hgourvest"
+                    name = "Henri Gourvest"
+                    email = "hgourvest@progdigy.com"
+                }
+            }
+            scm {
+                url = "https://github.com/hgourvest/Firebird-Client-KMP.git"
+            }
         }
     }
 }
