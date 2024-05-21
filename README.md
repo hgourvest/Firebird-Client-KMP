@@ -24,12 +24,16 @@ The project is organized into three modules,
 ### JVM & Kotlin Native
 
 ``` kotlin
+repositories {
+    mavenCentral()
+}
+
 dependencies {
    // the main dependency
-   implementation("com.progdigy:FirebirdClient:1.0")
+   implementation("com.progdigy:FirebirdClient:1.0-RC")
    
    // or the extended dependency 
-   implementation("com.progdigy:FirebirdClient-ext:1.0")
+   implementation("com.progdigy:FirebirdClient-ext:1.0-RC")
 }
 ```
 
@@ -45,9 +49,13 @@ you must be logged in to download the file.
 Then declare these dependencies in your gradle file
 
 ``` kotlin
+repositories {
+    mavenCentral()
+}
+
 dependencies {
    implementation(files("libs/Firebird-5.0.0.xxxx-x-android-embedded.aar"))
-   implementation("com.progdigy:FirebirdClient:1.0")
+   implementation("com.progdigy:FirebirdClient:1.0-RC")
     
 }
 ```
