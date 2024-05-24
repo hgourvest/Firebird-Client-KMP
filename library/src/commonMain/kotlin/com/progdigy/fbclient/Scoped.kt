@@ -201,6 +201,46 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
             fun getType(index: Int): Type = Type.entries[API.getType(sqlda, index)]
 
             /**
+             * Retrieves the number of fields from SQLDA.
+             *
+             * @param sqlda The SQLDA object.
+             * @return The count from the SQLDA as an integer.
+             */
+            fun getCount(): Int = API.getCount(sqlda)
+
+            /**
+             * Retrieves the SQL name for a given index.
+             *
+             * @param index The index of the SQL name to retrieve.
+             * @return The SQL name at the specified index.
+             */
+            fun getSqlName(index: Int): String = API.getName(sqlda, index)
+
+            /**
+             * Returns the relative name at the specified index.
+             *
+             * @param index the index of the relative name to retrieve
+             * @return the relative name at the specified index
+             */
+            fun getRelName(index: Int): String = API.getRelation(sqlda, index)
+
+            /**
+             * Returns the name of the owner at the specified index.
+             *
+             * @param index the index of the owner
+             * @return the name of the owner as a String
+             */
+            fun getOwnName(index: Int): String = API.getOwner(sqlda, index)
+
+            /**
+             * Retrieves the alias name at the specified index.
+             *
+             * @param index The index of the alias name to retrieve.
+             * @return The alias name at the specified index.
+             */
+            fun getAliasName(index: Int): String = API.getAlias(sqlda, index)
+
+            /**
              * Retrieves the scale of the field at the specified index in the SQLDA.
              *
              * @param index The index of the field in the SQLDA.

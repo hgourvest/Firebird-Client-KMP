@@ -74,6 +74,16 @@ actual object API {
     @JvmStatic
     actual external fun getType(sqlda: HANDLE, index: Int): Int
     @JvmStatic
+    actual external fun getCount(sqlda: HANDLE): Int
+    @JvmStatic
+    actual external fun getName(sqlda: HANDLE, index: Int): String
+    @JvmStatic
+    actual external fun getRelation(sqlda: HANDLE, index: Int): String
+    @JvmStatic
+    actual external fun getOwner(sqlda: HANDLE, index: Int): String
+    @JvmStatic
+    actual external fun getAlias(sqlda: HANDLE, index: Int): String
+    @JvmStatic
     actual external fun getIsNull(sqlda: HANDLE, index: Int): Boolean
     @JvmStatic
     actual external fun getScale(sqlda: HANDLE, index: Int): Long

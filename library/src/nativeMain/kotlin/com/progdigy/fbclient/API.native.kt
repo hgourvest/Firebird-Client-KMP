@@ -1068,6 +1068,94 @@ actual object API {
         }
 
     /**
+     * Retrieves the number of fields in the specified SQLDA. [sqlda].
+     *
+     * @param sqlda The SQLDA handle from which to retrieve the count.
+     * @return The count retrieved from the SQLDA handle.
+     * @throws FirebirdException if the SQLDA handle is invalid.
+     */
+    actual fun getCount(sqlda: HANDLE): Int {
+        val p = sqlda.toXSQLDA()
+        if (p != null) {
+            return p.sqld.toInt()
+        } else
+            throw FirebirdException(ERR_INVALID_HANDLE)
+    }
+
+    /**
+     * Returns the name of the field at the specified index in the given SQLDA.
+     *
+     * @param sqlda the SQLDA containing the SQL data
+     * @param index the index of the SQL data in the SQLDA
+     * @return the name of the field
+     */
+    actual fun getName(sqlda: HANDLE, index: Int): String {
+        return getField(sqlda, index) {v ->
+            val buffer = ByteArray(v.sqlname_length.toInt())
+            buffer.usePinned {
+                val pointer = it.addressOf(0)
+                memcpy(pointer, v.sqlname, v.sqlname_length.toULong())
+            }
+            return@getField buffer.decodeToString()
+        }
+    }
+
+    /**
+     * Retrieves the relation associated with the given SQLDA and index.
+     *
+     * @param sqlda the SQLDA handle
+     * @param index the index of the relation to retrieve
+     * @return the relation associated with the given field
+     */
+    actual fun getRelation(sqlda: HANDLE, index: Int): String {
+        return getField(sqlda, index) {v ->
+            val buffer = ByteArray(v.relname_length.toInt())
+            buffer.usePinned {
+                val pointer = it.addressOf(0)
+                memcpy(pointer, v.relname, v.relname_length.toULong())
+            }
+            return@getField buffer.decodeToString()
+        }
+    }
+
+    /**
+     * Retrieves the owner of a given SQLDA at the specified index.
+     *
+     * @param sqlda the SQLDA handle.
+     * @param index the index of the SQLDA.
+     * @return the owner of the field.
+     */
+    actual fun getOwner(sqlda: HANDLE, index: Int): String {
+        return getField(sqlda, index) {v ->
+            val buffer = ByteArray(v.ownname_length.toInt())
+            buffer.usePinned {
+                val pointer = it.addressOf(0)
+                memcpy(pointer, v.ownname, v.ownname_length.toULong())
+            }
+            return@getField buffer.decodeToString()
+        }
+    }
+
+    /**
+     * Retrieves the alias name of a field in the SQLDA at the specified index.
+     *
+     * @param sqlda   the SQLDA handle
+     * @param index   the index of the field to retrieve
+     * @return        the alias name of the field
+     * @throws FirebirdException if the index is out of bounds or the handle is invalid
+     */
+    actual fun getAlias(sqlda: HANDLE, index: Int): String {
+        return getField(sqlda, index) {v ->
+            val buffer = ByteArray(v.aliasname_length.toInt())
+            buffer.usePinned {
+                val pointer = it.addressOf(0)
+                memcpy(pointer, v.aliasname, v.aliasname_length.toULong())
+            }
+            return@getField buffer.decodeToString()
+        }
+    }
+
+    /**
      * Retrieves the null status of a field from the SQLDA.
      *
      * @param sqlda the SQLDA handle

@@ -142,6 +142,11 @@ expect object API {
     fun fetch(status: HANDLE, stHandle: HANDLE, sqlda: HANDLE): STATUS
 
     fun getType(sqlda: HANDLE, index: Int): Int
+    fun getCount(sqlda: HANDLE): Int
+    fun getName(sqlda: HANDLE, index: Int): String
+    fun getRelation(sqlda: HANDLE, index: Int): String
+    fun getOwner(sqlda: HANDLE, index: Int): String
+    fun getAlias(sqlda: HANDLE, index: Int): String
 
     fun getIsNull(sqlda: HANDLE, index: Int): Boolean
     fun getScale(sqlda: HANDLE, index: Int): Long

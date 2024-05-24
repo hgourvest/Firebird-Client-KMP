@@ -748,6 +748,79 @@ Java_com_progdigy_fbclient_API_getType(JNIEnv *env, jclass clazz, jlong sqlda, j
     return 0;
 }
 
+jstring getName(JNIEnv *env, jlong sqlda, jint index, int kind) {
+    char data[33] = {0};
+    auto handle = reinterpret_cast<XSQLDA **>(sqlda);
+    if (handle != nullptr) {
+        auto p = *handle;
+        if (index >= 0 && index < p->sqld) {
+            auto v = &p->sqlvar[index];
+            switch (kind) {
+                case 0:
+                    memcpy(data, v->sqlname, v->sqlname_length);
+                    data[v->sqlname_length] = 0;
+                    break;
+                case 1:
+                    memcpy(data, v->relname, v->relname_length);
+                    data[v->relname_length] = 0;
+                    break;
+                case 2:
+                    memcpy(data, v->ownname, v->ownname_length);
+                    data[v->ownname_length] = 0;
+                    break;
+                case 3:
+                    memcpy(data, v->aliasname, v->aliasname_length);
+                    data[v->aliasname_length] = 0;
+                    break;
+                default:
+                    // nop
+                    break;
+            }
+            return env->NewStringUTF(data);
+        } else
+            throwOutOfBoundError(env, index);
+    } else
+        throwHandleError(env);
+    return nullptr;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_progdigy_fbclient_API_getName(JNIEnv *env, jclass clazz, jlong sqlda, jint index) {
+    return getName(env, sqlda, index, 0);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_progdigy_fbclient_API_getRelation(JNIEnv *env, jclass clazz, jlong sqlda, jint index) {
+    return getName(env, sqlda, index, 1);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_progdigy_fbclient_API_getOwner(JNIEnv *env, jclass clazz, jlong sqlda, jint index) {
+    return getName(env, sqlda, index, 2);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_progdigy_fbclient_API_getAlias(JNIEnv *env, jclass clazz, jlong sqlda, jint index) {
+    return getName(env, sqlda, index, 3);
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_progdigy_fbclient_API_getCount(JNIEnv *env, jclass clazz, jlong sqlda) {
+    char data[33] = {0};
+    auto handle = reinterpret_cast<XSQLDA **>(sqlda);
+    if (handle != nullptr) {
+        auto p = *handle;
+        return p->sqld;
+    } else
+        throwHandleError(env);
+    return 0;
+}
+
 inline void setValueBoolean(JNIEnv* env, int index, ISC_SCHAR* data, ISC_SHORT code, jboolean value) {
     switch (code) {
         case SQL_BOOLEAN:
