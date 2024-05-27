@@ -516,6 +516,27 @@ actual object API {
     }
 
     /**
+     * Retrieves the type of a SQL statement.
+     *
+     * @param status The status handle.
+     * @param stHandle The statement handle.
+     * @return The type of the SQL statement as an integer.
+     * @throws FirebirdException if the provided statement handle is invalid.
+     */
+    actual fun getStatementType(status: HANDLE, stHandle: HANDLE): Int {
+        val statusArray = status.toCPointer<ISC_STATUSVar>()
+        val stHandlePtr = stHandle.toCPointer<FB_API_HANDLEVar>()
+        if (stHandlePtr == null || stHandlePtr.pointed.value == 0u)
+            throw FirebirdException(ERR_INVALID_HANDLE)
+        val data = nativeHeap.allocArray<ByteVar>(9)
+        data[0] = isc_info_sql_stmt_type.toByte()
+        isc_dsql_sql_info(statusArray, stHandlePtr, 1, data, 8, data.plus(1))
+        val ret = data[4] - 1
+        nativeHeap.free(data)
+        return ret
+    }
+
+    /**
      * Executes a SQL statement with the given parameters.
      *
      * @param status The status array handle.

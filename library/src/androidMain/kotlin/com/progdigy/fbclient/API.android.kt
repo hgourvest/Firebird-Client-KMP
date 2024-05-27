@@ -36,6 +36,8 @@ actual object API {
     actual external fun prepareStatement(status: HANDLE, dbHandle: HANDLE, trHandle: HANDLE, stHandle: HANDLE, sql: String,
                                   cursor: String?, dialect: Short, sqlda: HANDLE): STATUS
     @JvmStatic
+    actual external fun getStatementType(status: HANDLE, stHandle: HANDLE): Int
+    @JvmStatic
     actual external fun freeStatement(status: HANDLE, stHandle: HANDLE, action: Short): STATUS
     @JvmStatic
     actual external fun prepareParams(status: HANDLE, stHandle: HANDLE, dialect: Short, sqlda: HANDLE): STATUS

@@ -168,6 +168,13 @@ ISC_STATUS ISC_EXPORT isc_create_blob(ISC_STATUS*,
                                       isc_blob_handle*,
                                       ISC_QUAD*);
 
+ISC_STATUS ISC_EXPORT isc_dsql_sql_info(ISC_STATUS*,
+                                        isc_stmt_handle*,
+                                        short,
+                                        const void*,
+                                        short,
+                                        void*);
+
 #ifdef __cplusplus
 }
 #endif

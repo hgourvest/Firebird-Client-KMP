@@ -61,6 +61,9 @@ static ISC_STATUS ISC_EXPORT (*close_blob)(ISC_STATUS *, isc_blob_handle *);
 
 static ISC_STATUS ISC_EXPORT (*create_blob)(ISC_STATUS*, isc_db_handle*, isc_tr_handle*, isc_blob_handle*, ISC_QUAD*);
 
+static ISC_STATUS ISC_EXPORT (*dsql_sql_info)(ISC_STATUS*, isc_stmt_handle*, short, const ISC_SCHAR*, short, ISC_SCHAR*);
+
+
 
 void throwDataConversionError(JNIEnv* env, int column) {
     jclass exceptionClass = env->FindClass("com/progdigy/fbclient/FirebirdException");
@@ -152,6 +155,7 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
     *(FARPROC *) (&blob_info) = GetProcAddress(handle, "isc_blob_info");
     *(FARPROC *) (&close_blob) = GetProcAddress(handle, "isc_close_blob");
     *(FARPROC *) (&create_blob) = GetProcAddress(handle, "isc_create_blob");
+    *(FARPROC *) (&dsql_sql_info) = GetProcAddress(handle, "isc_dsql_sql_info");
 
 #else
     #ifdef __APPLE__
@@ -195,6 +199,7 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
     *(void **) (&blob_info) = dlsym(handle, "isc_blob_info");
     *(void **) (&close_blob) = dlsym(handle, "isc_close_blob");
     *(void **) (&create_blob) = dlsym(handle, "isc_create_blob");
+    *(void **) (&dsql_sql_info) = dlsym(handle, "isc_dsql_sql_info");
 #endif
 
     return JNI_VERSION_1_6;
@@ -608,6 +613,18 @@ Java_com_progdigy_fbclient_API_prepareStatement(JNIEnv *env, jclass clazz, jlong
         }
     }
     return ret;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_progdigy_fbclient_API_getStatementType(JNIEnv *env, jclass clazz, jlong status, jlong st_handle) {
+    ISC_SCHAR data[9] = {isc_info_sql_stmt_type};
+    const auto statusArray = reinterpret_cast<ISC_STATUS*>(status);
+    auto stHandle = reinterpret_cast<FB_API_HANDLE*>(st_handle);
+    if (stHandle == nullptr || *stHandle == 0)
+        throwHandleError(env);
+    dsql_sql_info(statusArray, stHandle, 1, (ISC_SCHAR*)&data, 8, (ISC_SCHAR*)&data[1]);
+    return data[4] - 1;
 }
 
 extern "C"

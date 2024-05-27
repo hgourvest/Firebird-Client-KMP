@@ -18,7 +18,7 @@ const val DSQL_drop	 : Short = 2
 /**
  * Represents the data types for SQLDA fields.
  */
-enum class Type {
+enum class DataType {
     SHORT,
     INT,
     LONG,
@@ -35,6 +35,23 @@ enum class Type {
     DATETIME_TZ,
     BLOB_BINARY,
     BLOB_TEXT
+}
+
+enum class StatementType {
+    SELECT,
+    INSERT,
+    UPDATE,
+    DELETE,
+    DDL,
+    GET_SEGMENT,
+    PUT_SEGMENT,
+    EXEC_PROCEDURE,
+    START_TRANSACTION,
+    COMMIT,
+    ROLLBACK,
+    SELECT_FOR_UPDATE,
+    SET_GENERATOR,
+    SAVEPOINT
 }
 
 const val isc_arith_except         = 335544321L
@@ -135,6 +152,7 @@ expect object API {
     fun rollbackTransaction(status: HANDLE, trHandle: HANDLE, retain: Boolean): STATUS
     fun prepareStatement(status: HANDLE, dbHandle: HANDLE, trHandle: HANDLE, stHandle: HANDLE, sql: String,
                                   cursor: String?, dialect: Short, sqlda: HANDLE): STATUS
+    fun getStatementType(status: HANDLE, stHandle: HANDLE): Int
     fun freeStatement(status: HANDLE, stHandle: HANDLE, action: Short): STATUS
     fun prepareParams(status: HANDLE, stHandle: HANDLE, dialect: Short, sqlda: HANDLE): STATUS
     fun execute(status: HANDLE, trHandle: HANDLE, stHandle: HANDLE, dialect: Short, sqlda: HANDLE): STATUS

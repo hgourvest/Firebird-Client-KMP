@@ -198,7 +198,7 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
              * @param index The index of the field in the SQLDA.
              * @return The data type of the field.
              */
-            fun getType(index: Int): Type = Type.entries[API.getType(sqlda, index)]
+            fun getType(index: Int): DataType = DataType.entries[API.getType(sqlda, index)]
 
             /**
              * Retrieves the number of fields from SQLDA.
@@ -483,6 +483,13 @@ class Attachment private constructor(val status: HANDLE, val dbHandle: HANDLE): 
          */
         inner class Statement(var stHandle: HANDLE, var output: HANDLE) {
             internal var next: Statement? = null
+
+            /**
+             * Returns the type of the statement.
+             *
+             * @return The type of the statement as a value from the StatementType enum
+             */
+            fun getStatementType(): StatementType = StatementType.entries[API.getStatementType(status, stHandle)]
 
             /**
              * Represents a record set obtained from executing a SQL statement.

@@ -160,14 +160,14 @@ fun SQLDA.setTimeZone(index: Int, value: TimeZone) = setTimeZoneId(index, value.
  */
 fun SQLDA.setInstant(index: Int, value: Instant, tz: TimeZone = TimeZone.currentSystemDefault()) {
     when (getType(index)) {
-        Type.DATE -> setDate(index, value.toLocalDateTime(tz).date)
-        Type.TIME -> setTime(index, value.toLocalDateTime(tz).time)
-        Type.DATETIME -> setDateTime(index, value.toLocalDateTime(tz))
-        Type.TIME_TZ -> {
+        DataType.DATE -> setDate(index, value.toLocalDateTime(tz).date)
+        DataType.TIME -> setTime(index, value.toLocalDateTime(tz).time)
+        DataType.DATETIME -> setDateTime(index, value.toLocalDateTime(tz))
+        DataType.TIME_TZ -> {
             setTime(index, value.toLocalDateTime(TimeZone.UTC).time)
             setTimeZone(index, tz)
         }
-        Type.DATETIME_TZ -> {
+        DataType.DATETIME_TZ -> {
             setDateTime(index, value.toLocalDateTime(TimeZone.UTC))
             setTimeZone(index, tz)
         }

@@ -130,18 +130,18 @@ fun SQLDA.getAnyOrNull(index: Int): Any? = if (getIsNull(index)) null else getAn
  */
 fun SQLDA.getAny(index: Int): Any {
     return when (getType(index)) {
-        Type.SHORT -> if (getScale(index) > 0) getBigDecimal(index) else getShort(index)
-        Type.INT -> if (getScale(index) > 0) getBigDecimal(index) else getInt(index)
-        Type.LONG -> if (getScale(index) > 0) getBigDecimal(index) else getLong(index)
-        Type.FLOAT -> getFloat(index)
-        Type.DOUBLE -> getDouble(index)
-        Type.STRING, Type.BLOB_TEXT -> getString(index)
-        Type.BYTEARRAY, Type.BLOB_BINARY -> getByteArray(index)
-        Type.INT128 -> if (getScale(index) > 0) getBigDecimal(index) else getBigInteger(index)
-        Type.BOOLEAN -> getBoolean(index)
-        Type.DATE -> getDate(index)
-        Type.TIME -> getTime(index)
-        Type.DATETIME -> getLocalDateTime(index)
+        DataType.SHORT -> if (getScale(index) > 0) getBigDecimal(index) else getShort(index)
+        DataType.INT -> if (getScale(index) > 0) getBigDecimal(index) else getInt(index)
+        DataType.LONG -> if (getScale(index) > 0) getBigDecimal(index) else getLong(index)
+        DataType.FLOAT -> getFloat(index)
+        DataType.DOUBLE -> getDouble(index)
+        DataType.STRING, DataType.BLOB_TEXT -> getString(index)
+        DataType.BYTEARRAY, DataType.BLOB_BINARY -> getByteArray(index)
+        DataType.INT128 -> if (getScale(index) > 0) getBigDecimal(index) else getBigInteger(index)
+        DataType.BOOLEAN -> getBoolean(index)
+        DataType.DATE -> getDate(index)
+        DataType.TIME -> getTime(index)
+        DataType.DATETIME -> getLocalDateTime(index)
         else -> throw FirebirdException("Unhandled data type ${getType(index)}")
     }
 }

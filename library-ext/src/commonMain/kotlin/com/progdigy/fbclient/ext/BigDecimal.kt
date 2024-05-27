@@ -5,7 +5,7 @@ import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.toBigInteger
 import com.progdigy.fbclient.Attachment.Transaction.SQLDA
 import com.progdigy.fbclient.FirebirdException
-import com.progdigy.fbclient.Type
+import com.progdigy.fbclient.DataType
 
 /**
  * Retrieves the value at the given index from the SQLDA and returns it as a [BigDecimal].
@@ -25,10 +25,10 @@ fun SQLDA.getBigDecimalOrNull(index: Int): BigDecimal? =
  */
 fun SQLDA.getBigDecimal(index: Int): BigDecimal =
     BigDecimal.fromBigIntegerWithScale(when (getType(index)) {
-        Type.SHORT -> getShort(index).toBigInteger()
-        Type.INT -> getInt(index).toBigInteger()
-        Type.LONG -> getLong(index).toBigInteger()
-        Type.INT128 -> getInt128(index).let {
+        DataType.SHORT -> getShort(index).toBigInteger()
+        DataType.INT -> getInt(index).toBigInteger()
+        DataType.LONG -> getLong(index).toBigInteger()
+        DataType.INT128 -> getInt128(index).let {
             int128ToBigInteger(it[0], it[1])
         }
         else ->
@@ -45,10 +45,10 @@ fun SQLDA.getBigDecimal(index: Int): BigDecimal =
 fun SQLDA.setBigDecimal(index: Int, value: BigDecimal) {
     val int = value.firebirdScale(getScale(index))
     when (getType(index)) {
-        Type.SHORT -> setShort(index, int.shortValue(true))
-        Type.INT -> setInt(index, int.intValue(true))
-        Type.LONG -> setLong(index, int.longValue(true))
-        Type.INT128 -> int.firebirdDecode { a, b ->
+        DataType.SHORT -> setShort(index, int.shortValue(true))
+        DataType.INT -> setInt(index, int.intValue(true))
+        DataType.LONG -> setLong(index, int.longValue(true))
+        DataType.INT128 -> int.firebirdDecode { a, b ->
             setInt128(index, a, b)
         }
         else ->
