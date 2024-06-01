@@ -6,3 +6,4 @@ linkerOpts.mingw = -L"C:/Program Files/Firebird/Firebird_5_0/lib/" -lfbclient_ms
 linkerOpts.linux = -L/opt/firebird/lib/ -lfbclient
 linkerOpts.osx = -L/Library/Frameworks/Firebird.framework/Resources/lib/ -lfbclient
 
+noStringConversion = isc_attach_database isc_create_database isc_dsql_execute_immediate isc_dsql_prepare isc_get_segment isc_put_segment isc_blob_info isc_dsql_sql_info

@@ -73,7 +73,7 @@ kotlin {
             val main by getting {
                 cinterops {
                     create("fbclient") {
-                        header(file("../native/include/fbclient.h"))
+                        header(file("../native/include/ibase.h"))
                     }
                 }
             }

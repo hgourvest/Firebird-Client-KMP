@@ -1,5 +1,5 @@
 #include <jni.h>
-#include <fbclient.h>
+#include <ibase.h>
 #include <cstring>
 #include <algorithm>
 #include <limits>
