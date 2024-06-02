@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.progdigy"
-version = "1.0-RC"
+version = "1.0"
 
 publishing {
     repositories {

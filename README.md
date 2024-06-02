@@ -30,10 +30,10 @@ repositories {
 
 dependencies {
    // the main dependency
-   implementation("com.progdigy:FirebirdClient:1.0-RC")
+   implementation("com.progdigy:FirebirdClient:1.0")
    
    // or the extended dependency 
-   implementation("com.progdigy:FirebirdClient-ext:1.0-RC")
+   implementation("com.progdigy:FirebirdClient-ext:1.0")
 }
 ```
 
@@ -54,7 +54,7 @@ repositories {
 
 dependencies {
    implementation(files("libs/Firebird-5.0.0.xxxx-x-android-embedded.aar"))
-   implementation("com.progdigy:FirebirdClient:1.0-RC")
+   implementation("com.progdigy:FirebirdClient:1.0")
     
 }
 ```
